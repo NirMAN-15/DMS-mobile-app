@@ -71,6 +71,15 @@ class DatabaseHelper {
     return await db.insert('products', product.toMap());
   }
 
+  Future<void> insertProducts(List<Product> products) async {
+    final db = await instance.database;
+    final batch = db.batch();
+    for (var product in products) {
+      batch.insert('products', product.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    }
+    await batch.commit(noResult: true);
+  }
+
   Future<List<Product>> getProducts() async {
     final db = await instance.database;
     final result = await db.query('products');
@@ -100,6 +109,15 @@ class DatabaseHelper {
   Future<int> insertShop(Shop shop) async {
     final db = await instance.database;
     return await db.insert('shops', shop.toMap());
+  }
+
+  Future<void> insertShops(List<Shop> shops) async {
+    final db = await instance.database;
+    final batch = db.batch();
+    for (var shop in shops) {
+      batch.insert('shops', shop.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    }
+    await batch.commit(noResult: true);
   }
 
   Future<List<Shop>> getShops() async {
