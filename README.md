@@ -31,8 +31,14 @@ dms_mobile/
 ├── pubspec.yaml         # Package dependencies
 ```
 
-## Phase 1: Foundation Completed
+## 🚀 Development Phases
+
+### Phase 1: Foundation (Completed)
 * **Architecture Setup:** Established standard `lib/` folder structure.
 * **Offline Database:** Bootstrapped local SQLite via `database_helper.dart` with robust offline data management.
 * **Data Models:** Added `Product`, `Shop`, and `Order` models.
 * **UI Integration:** Built functional dummy screens (`LoginScreen`, `CartScreen`, `PrintScreen`) linked to local SQLite for basic offline read/write operations.
+
+### Phase 2: Data Synchronization (Current)
+* **Morning Sync:** Implemented bulk insert capabilities (`insertProducts`, `insertShops`) in `database_helper.dart` to efficiently save large sets of downloaded items to SQLite.
+* **API Service:** Added `api_service.dart` with data fetching functions (`fetchProducts`, `fetchShops`) to communicate with the remote backend.
