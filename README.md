@@ -40,6 +40,10 @@ This single document explains exactly what every generated file in the codebase 
 * **`toMap()`:** A translator function. SQLite databases can only read simple Maps (dictionaries), not complex Dart objects. This converts the `Shop` object into a database-friendly format.
 * **`fromMap()`:** The reverse translator. When reading data from SQLite, this converts it back into a Dart `Shop` object that the UI can easily display.
 
+### `lib/models/product.dart`
+**What it is:** The data blueprint for a "Product".
+**What happens here:** Defines a catalog item's structure (ID, name, price, stock). Similar to the `Shop` model, it features `toMap()` and `fromMap()` translators to easily save product lists into the SQLite database.
+
 ---
 
 ## 4. Offline Database Logic
@@ -70,3 +74,20 @@ This single document explains exactly what every generated file in the codebase 
 * **Offline Banner:** Shows a visual banner at the top letting the rep know they are safely working in offline mode.
 * **Dynamic Status Update:** Clicking "Visit" on a shop safely updates that row in the database. The screen instantly refetches the data, hiding the visit button and showing a green checkmark.
 * **Mock Sync:** Has a sync button that simulates pushing these localized SQLite changes up to the cloud.
+
+### `lib/widgets/sync_button.dart`
+**What it is:** A reusable UI component for triggering the "Morning Sync".
+**What happens here:** A self-contained button that calls the `ApiService` to fetch cloud data securely.
+**Core Features:**
+* **State Management:** Automatically shows a loading circular spinner while the network request is processing.
+* **Error Handling:** Captures API failures and elegantly displays a warning via a SnackBar, ensuring the app doesn't crash on network failure.
+
+---
+
+## 6. API & Network Logic
+### `lib/services/api_service.dart`
+**What it is:** The secure communication bridge for the app.
+**What happens here:** Connects to the cloud to fetch fresh shops and products during the "Morning Sync".
+**Core Features:**
+* **Secure Requests:** Enforces strict HTTPS communication and injects the locally stored JWT token into the request header for authentication.
+* **Offline Caching:** Directly saves fetched cloud data into the local SQLite database using `DatabaseHelper`. This guarantees the app works seamlessly even if internet access is lost for the rest of the day.
