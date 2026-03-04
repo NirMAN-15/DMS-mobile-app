@@ -4,6 +4,10 @@ import '../models/product.dart';
 import '../models/shop.dart';
 
 class ApiService {
+  final http.Client _client;
+
+  ApiService({http.Client? client}) : _client = client ?? http.Client();
+
   // Placeholder for API calls like syncing local data to server
   Future<bool> syncData() async {
     // Implement API synchronization logic here
@@ -16,7 +20,7 @@ class ApiService {
 
   Future<List<Product>> fetchProducts() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/products'));
+      final response = await _client.get(Uri.parse('$baseUrl/products'));
       
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
@@ -31,7 +35,7 @@ class ApiService {
 
   Future<List<Shop>> fetchShops() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/shops'));
+      final response = await _client.get(Uri.parse('$baseUrl/shops'));
       
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
