@@ -3,6 +3,7 @@ import '../core/app_colors.dart';
 import '../data/database_helper.dart';
 import '../models/shop.dart';
 import 'login_screen.dart';
+import '../widgets/sync_button.dart';
 
 class RouteListScreen extends StatefulWidget {
   const RouteListScreen({super.key});
@@ -53,12 +54,11 @@ class _RouteListScreenState extends State<RouteListScreen> {
       appBar: AppBar(
         title: const Text('Today\'s Route'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.sync),
-            tooltip: 'Sync Data (Mock)',
-            onPressed: () {
+          SyncButton(
+            onSyncComplete: () {
+              _loadShops();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Simulated Sync: Data is up to date.')),
+                const SnackBar(content: Text('Morning Sync completed successfully!')),
               );
             },
           ),

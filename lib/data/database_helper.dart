@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/shop.dart';
+import '../models/product.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -34,6 +35,15 @@ class DatabaseHelper {
         latitude REAL,
         longitude REAL,
         isVisited INTEGER
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE products(
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        price REAL,
+        stock INTEGER
       )
     ''');
 
@@ -111,5 +121,35 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  // --- Sync Methods ---
+  Future<String?> getToken() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('auth_session', limit: 1);
+    if (maps.isNotEmpty) {
+      return maps.first['token'] as String?;
+    }
+    return null;
+  }
+
+  Future<void> syncShops(List<Shop> newShops) async {
+    final db = await database;
+    await db.transaction((txn) async {
+      await txn.delete('shops');
+      for (var shop in newShops) {
+        await txn.insert('shops', shop.toMap());
+      }
+    });
+  }
+
+  Future<void> syncProducts(List<Product> newProducts) async {
+    final db = await database;
+    await db.transaction((txn) async {
+      await txn.delete('products');
+      for (var p in newProducts) {
+        await txn.insert('products', p.toMap());
+      }
+    });
   }
 }
