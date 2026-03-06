@@ -4,6 +4,10 @@ import '../models/shop.dart';
 import '../models/product.dart';
 
 class ApiService {
+  final http.Client client;
+
+  ApiService({http.Client? client}) : client = client ?? http.Client();
+
   // The API service must strictly use HTTPS
   static const String _baseUrl = 'https://api.example.com/v1';
 
@@ -24,7 +28,7 @@ class ApiService {
       // Note: We wrap this in a try-catch to simulate success even if the mock endpoint fails
       http.Response? response;
       try {
-        response = await http.get(
+        response = await client.get(
           uri,
           headers: {
             'Content-Type': 'application/json',
